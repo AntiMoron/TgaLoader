@@ -1,0 +1,15 @@
+# depslib dependency file v1.0
+1405567396 source:d:\tgaloader\tgaloader\testsource.cpp
+	"tgaLoader.hpp"
+
+1405566595 d:\tgaloader\tgaloader\tgaloader.hpp
+	<cstdio>
+	<string>
+	<exception>
+	"TgaData.hpp"
+
+1405564601 d:\tgaloader\tgaloader\tgadata.hpp
+
+1405565672 source:d:\tgaloader\tgaloader\tgaloader.cpp
+	"tgaLoader.hpp"
+
