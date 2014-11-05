@@ -5,6 +5,7 @@
 #include<string>
 #include<memory>
 #include<exception>
+#include<algorithm>
 #include"TgaData.hpp"
 
 namespace TGA
@@ -128,7 +129,7 @@ namespace TGA
 			//So I didn't process the color map data temporarily.
 			if(pOut->colorMapType != 0)
 			{
-				int colorBitField = min(colorMapEntrySize / 3 ,8);
+				int colorBitField = std::min(pOut->colorMapEntrySize / 3 ,8);
 			}
 			else
 			{
