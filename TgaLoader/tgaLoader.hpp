@@ -52,7 +52,7 @@ namespace TGA
 			}
 
 			FILE* file_ptr = nullptr;
-			file_ptr = fopen(filename,"r");
+			file_ptr = fopen(filename,"rb");
 			if(nullptr == file_ptr)
 			{
 				printf("can't open file '%s' at 'LoadFile' function.\r\n",filename);
@@ -104,6 +104,7 @@ namespace TGA
                     pOut->pixelDepth,
                     pOut->imageDescriptor
 					);
+
 			if(pOut->id != 0)
 			{
 				printf("Image Ids:\n");
@@ -123,38 +124,40 @@ namespace TGA
 			{
 				printf("No Image Id.\n");
 			}
+			// in the test tga file I used ,there's no color map.
+			//So I didn't process the color map data temporarily.
 			if(pOut->colorMapType != 0)
 			{
-//				int colorBitField = min(colorMapEntrySize / 3 ,8);
-				;
+				int colorBitField = min(colorMapEntrySize / 3 ,8);
 			}
 			else
 			{
 				printf("There is no color map.\n");
 			}
-
-			long pixelCount = (unsigned long)(pOut->width) * (unsigned long)(pOut->height);
-			long colorDataFieldLenth = (unsigned long)(pOut->width) * (unsigned long)(pOut->height) * pOut->pixelDepth / 8;
+			unsigned long pixelCount = (unsigned long)(pOut->width) * (unsigned long)(pOut->height);
 			short bytesPerPixel = pOut->pixelDepth / 8;
+			long colorDataFieldLenth = (unsigned long)(pOut->width) * (unsigned long)(pOut->height) * bytesPerPixel;
 			unsigned char* colorData = new unsigned char[colorDataFieldLenth];
 			pOut->pColor = new color4i[pixelCount];
-
+			printf("%d\n",colorDataFieldLenth);
 			fread(colorData,sizeof(unsigned char),colorDataFieldLenth,file_ptr);
+			// read the true-type image data.
 			for(int i = 0;i < pixelCount;i++)
 			{
-				pOut->pColor[i].r = colorData[bytesPerPixel * i];
+				pOut->pColor[i].a = colorData[bytesPerPixel * i];
 				if(bytesPerPixel > 1)
-					pOut->pColor[i].g = colorData[bytesPerPixel * i];
+					pOut->pColor[i].r = colorData[bytesPerPixel * i + 1];
+				else
+					pOut->pColor[i].r = 0.0f;
+				if(bytesPerPixel > 2)
+					pOut->pColor[i].g = colorData[bytesPerPixel * i + 2];
 				else
 					pOut->pColor[i].g = 0.0f;
-				if(bytesPerPixel > 2)
-					pOut->pColor[i].b = colorData[bytesPerPixel * i];
+				if(bytesPerPixel > 3)
+					pOut->pColor[i].b = colorData[bytesPerPixel * i + 3];
 				else
 					pOut->pColor[i].b = 0.0f;
-				if(bytesPerPixel > 3)
-					pOut->pColor[i].a = colorData[bytesPerPixel * i];
-				else
-					pOut->pColor[i].a = 0.0f;
+//				printf("%d %d %d %d\n",pOut->pColor[i].r,pOut->pColor[i].g,pOut->pColor[i].b,pOut->pColor[i].a);
 			}
 			if(colorData != nullptr)
 			{
@@ -217,5 +220,6 @@ namespace TGA
 		static TgaLoader* instance;
 	};
 }
+
 #define TGALOAD(path,out) (TGA::TgaLoader::getLoader().loadFile(path,out))
 #endif // _TGALOADER_H__
