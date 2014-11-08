@@ -10,9 +10,6 @@
 
 namespace TGA
 {
-	typedef unsigned char BYTE;
-	typedef unsigned long ULONG;
-	typedef unsigned short USHORT;
 	class TgaLoader
 	{
 	public:
@@ -135,9 +132,10 @@ namespace TGA
 			{
 				printf("There is no color map.\n");
 			}
-			unsigned long pixelCount = (unsigned long)(pOut->width) * (unsigned long)(pOut->height);
+
 			short bytesPerPixel = pOut->pixelDepth / 8;
-			long colorDataFieldLenth = (unsigned long)(pOut->width) * (unsigned long)(pOut->height) * bytesPerPixel;
+			std::size_t pixelCount = (unsigned long)(pOut->width) * (unsigned long)(pOut->height);
+			std::size_t colorDataFieldLenth = pixelCount * bytesPerPixel;
 			unsigned char* colorData = new unsigned char[colorDataFieldLenth];
 			pOut->pColor = new color4i[pixelCount];
 			printf("%d\n",colorDataFieldLenth);

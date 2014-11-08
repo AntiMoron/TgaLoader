@@ -13,12 +13,12 @@
 1405565672 source:d:\tgaloader\tgaloader\tgaloader.cpp
 	"tgaLoader.hpp"
 
-1415178176 source:c:\users\think\desktop\tgaloader\tgaloader\testsource.cpp
+1415180872 source:c:\users\think\desktop\tgaloader\tgaloader\testsource.cpp
 	"tgaLoader.hpp"
 	<iostream>
 	<windows.h>
 
-1415181701 c:\users\think\desktop\tgaloader\tgaloader\tgaloader.hpp
+1415447031 c:\users\think\desktop\tgaloader\tgaloader\tgaloader.hpp
 	<cstdio>
 	<string>
 	<memory>
