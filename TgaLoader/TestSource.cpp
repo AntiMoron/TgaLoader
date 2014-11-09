@@ -42,6 +42,7 @@ int main()
 	TGA::TgaData m;
 	try
 	{
+//		tgaTest.tga
 		TGA::TgaLoader::getLoader().loadFile("tgaTest.tga",&m);
 		printf("Succeed so far.\r\n");
 		for(int i=0;i<m.getHeight();i++)

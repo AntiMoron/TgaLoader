@@ -135,35 +135,72 @@ namespace TGA
 
 			short bytesPerPixel = pOut->pixelDepth / 8;
 			std::size_t pixelCount = (unsigned long)(pOut->width) * (unsigned long)(pOut->height);
-			std::size_t colorDataFieldLenth = pixelCount * bytesPerPixel;
-			unsigned char* colorData = new unsigned char[colorDataFieldLenth];
 			pOut->pColor = new color4i[pixelCount];
-			printf("%d\n",colorDataFieldLenth);
-			fread(colorData,sizeof(unsigned char),colorDataFieldLenth,file_ptr);
+			unsigned char temColorData[4];
 			// read the true-type image data.
-			for(int i = 0;i < pixelCount;i++)
+			std::size_t processIndex = 0;
+			while(processIndex < pixelCount)
 			{
-				pOut->pColor[i].a = colorData[bytesPerPixel * i];
-				if(bytesPerPixel > 1)
-					pOut->pColor[i].r = colorData[bytesPerPixel * i + 1];
-				else
-					pOut->pColor[i].r = 0.0f;
-				if(bytesPerPixel > 2)
-					pOut->pColor[i].g = colorData[bytesPerPixel * i + 2];
-				else
-					pOut->pColor[i].g = 0.0f;
-				if(bytesPerPixel > 3)
-					pOut->pColor[i].b = colorData[bytesPerPixel * i + 3];
-				else
-					pOut->pColor[i].b = 0.0f;
-//				printf("%d %d %d %d\n",pOut->pColor[i].r,pOut->pColor[i].g,pOut->pColor[i].b,pOut->pColor[i].a);
-			}
-			if(colorData != nullptr)
-			{
-				delete [] colorData;
-				colorData = nullptr;
-			}
+				unsigned char runLengthField;
+				fread(&runLengthField,sizeof(runLengthField),1,file_ptr);
+				bool isRunLengthData = (0x80 & runLengthField) != 0;
+				unsigned char successivePixelCount = 0x7f & runLengthField;
+				successivePixelCount += 1;
 
+				if(isRunLengthData == true)
+				{
+					fread(temColorData,sizeof(unsigned char),bytesPerPixel,file_ptr);
+					while(successivePixelCount--)
+					{
+//						printf("A:%d\n",processIndex);
+						if(processIndex >= pixelCount)
+						{
+							break;
+						}
+
+						pOut->pColor[processIndex].b = temColorData[0];
+						if(bytesPerPixel > 1)
+							pOut->pColor[processIndex].g = temColorData[1];
+						else
+							pOut->pColor[processIndex].g = 0.0f;
+						if(bytesPerPixel > 2)
+							pOut->pColor[processIndex].r = temColorData[2];
+						else
+							pOut->pColor[processIndex].r = 0.0f;
+						if(bytesPerPixel > 3)
+							pOut->pColor[processIndex].a = temColorData[3];
+						else
+							pOut->pColor[processIndex].a = 0.0f;
+						++processIndex;
+					}
+				}
+				else
+				{
+					while(successivePixelCount--)
+					{
+//						printf("B:%d\n",processIndex);
+						if(processIndex >= pixelCount)
+						{
+							break;
+						}
+						fread(temColorData,sizeof(unsigned char),bytesPerPixel,file_ptr);
+						pOut->pColor[processIndex].b = temColorData[0];
+						if(bytesPerPixel > 1)
+							pOut->pColor[processIndex].g = temColorData[1];
+						else
+							pOut->pColor[processIndex].g = 0.0f;
+						if(bytesPerPixel > 2)
+							pOut->pColor[processIndex].r = temColorData[2];
+						else
+							pOut->pColor[processIndex].r = 0.0f;
+						if(bytesPerPixel > 3)
+							pOut->pColor[processIndex].a = temColorData[3];
+						else
+							pOut->pColor[processIndex].a = 0.0f;
+						++processIndex;
+					}
+				}
+			}
 			if(nullptr != file_ptr)
 			{
 				fclose(file_ptr);
