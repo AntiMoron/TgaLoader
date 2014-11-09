@@ -159,15 +159,15 @@ namespace TGA
 						}
 
 						pOut->pColor[processIndex].b = temColorData[0];
-						if(bytesPerPixel > 1)
+						if(bytesPerPixel >= 1)
 							pOut->pColor[processIndex].g = temColorData[1];
 						else
 							pOut->pColor[processIndex].g = 0.0f;
-						if(bytesPerPixel > 2)
+						if(bytesPerPixel >= 2)
 							pOut->pColor[processIndex].r = temColorData[2];
 						else
 							pOut->pColor[processIndex].r = 0.0f;
-						if(bytesPerPixel > 3)
+						if(bytesPerPixel >= 3)
 							pOut->pColor[processIndex].a = temColorData[3];
 						else
 							pOut->pColor[processIndex].a = 0.0f;
@@ -185,15 +185,15 @@ namespace TGA
 						}
 						fread(temColorData,sizeof(unsigned char),bytesPerPixel,file_ptr);
 						pOut->pColor[processIndex].b = temColorData[0];
-						if(bytesPerPixel > 1)
+						if(bytesPerPixel >= 1)
 							pOut->pColor[processIndex].g = temColorData[1];
 						else
 							pOut->pColor[processIndex].g = 0.0f;
-						if(bytesPerPixel > 2)
+						if(bytesPerPixel >= 2)
 							pOut->pColor[processIndex].r = temColorData[2];
 						else
 							pOut->pColor[processIndex].r = 0.0f;
-						if(bytesPerPixel > 3)
+						if(bytesPerPixel >= 3)
 							pOut->pColor[processIndex].a = temColorData[3];
 						else
 							pOut->pColor[processIndex].a = 0.0f;
